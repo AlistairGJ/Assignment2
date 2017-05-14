@@ -13,14 +13,14 @@ AllProtein = pd.read_excel(AllProtein_filename, headers=0)
 #%run Task1.py
 AllProtein.describe()
 
-#Makes a unique mouse clumn
+#Makes a unique mouse column
 MakeMouseID = AllProtein['MouseID'].str.split('_').apply(pd.Series, 1)
 MakeMouseID.name = 'MouseIDavg'
 AllProteinID = AllProtein.join(MakeMouseID)
+AllProteinID.rename(columns = {0:'MouseIDavg'}, inplace = True)
 AllProteinID.columns
 AllProteinID.head(10)
 
-AllProteinID.rename(columns = {0:'MouseIDavg'}, inplace = True)
 del AllProteinID[1]
 del AllProtein
 
@@ -50,7 +50,7 @@ for index, data in enumerate(ProteinList):
     Protein11[data].plot(kind="hist", bins=20)
     plt.title("Distribution of " + data)
     plt.xlabel("Mice")
-    #plt.show()
+    plt.show()
 
 #Scatter plots
 ##for index, data in enumerate(ProteinList):
@@ -67,7 +67,7 @@ for index, data in enumerate(ProteinList):
 
 from pandas.tools.plotting import scatter_matrix
 scatter_matrix(Protein11, alpha=0.2,figsize=(16,16),diagonal='hist')
-#plt.show()
+plt.show()
 
 #Creates one line per mouse by averaging variables
 ProteinMeans = Protein11.groupby(['MouseIDavg'], group_keys=True).mean()
@@ -95,11 +95,20 @@ del ProteinObjectsGrp
 font = {'family' : 'monospace', 'weight' : 'regular', 'size' : '10'}
 plt.rc('font', **font)
 
+#Graphs to check for outliers
+colours3 = ['#a6cee3', '#1f78b4','#ff7f00','#cab2d6']
+ProteinList3 = ['BRAF_N', 'pERK_N', 'DYRK1A_N', 'ITSN1_N']
+
+for index, data in enumerate(ProteinList3):
+    ProteinData.plot(kind='box', y=index, color=colours3[index], label=data)
+    plt.grid()
+    plt.title(data + " Expression")
+    plt.show()
+
 #Graphs
 from pandas.tools.plotting import scatter_matrix
 scatter_matrix(ProteinData, alpha=0.2,figsize=(16,16),diagonal='hist')
-#plt.show()
-#plt.savefig('scatter_matrix.png')
+plt.show()
 
 #Getting a numeric value for mouse to use in scatter plots
 ProteinData['MouseNo'] = ProteinData.index
@@ -117,7 +126,7 @@ plt.xlim(-1,73)
 plt.ylim(0,3)
 plt.ylabel('Protein Expression Level')
 plt.xlabel('Mouse')
-#plt.show()
+plt.show()
 
 colours = ['#a6cee3', '#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99']
 ProteinList = ['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N']
@@ -131,19 +140,8 @@ for index, data in enumerate(ProteinList):
     plt.ylabel(data + ' Expression Level')
     plt.xlabel('Mouse')
     plt.title(data + " Expression")
-    #plt.show()
-    #plt.savefig(data + "_scatter.png") #need to get this working
-
-#Check for outliers
-colours3 = ['#a6cee3', '#1f78b4','#ff7f00','#cab2d6']
-ProteinList3 = ['BRAF_N', 'pERK_N', 'DYRK1A_N', 'ITSN1_N']
-
-for index, data in enumerate(ProteinList3):
-    ProteinData.plot(kind='box', y=index, color=colours3[index], label=data)
-    plt.grid()
-    plt.title(data + " Expression")
     plt.show()
-  
+ 
 #Task 3: Data Modelling (Classification)
 #Once split into separate scripts should start with
 #%run Task1.py
