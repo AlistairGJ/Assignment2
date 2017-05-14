@@ -42,6 +42,10 @@ Protein11['Treatment'].value_counts()
 Protein11['Behavior'].value_counts()
 Protein11['class'].value_counts()
 
+#Data checking
+mask_BRAF_null = pd.isnull(Protein11['BRAF_N'])
+Protein11.loc[mask_BRAF_null, 'MouseID']
+
 #Initial graphs per variable and scatter matrix
 #Histograms
 ProteinList = ['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N']
