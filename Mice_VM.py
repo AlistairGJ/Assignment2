@@ -134,6 +134,16 @@ for index, data in enumerate(ProteinList):
     #plt.show()
     #plt.savefig(data + "_scatter.png") #need to get this working
 
+#Check for outliers
+colours3 = ['#a6cee3', '#1f78b4','#ff7f00','#cab2d6']
+ProteinList3 = ['BRAF_N', 'pERK_N', 'DYRK1A_N', 'ITSN1_N']
+
+for index, data in enumerate(ProteinList3):
+    ProteinData.plot(kind='box', y=index, color=colours3[index], label=data)
+    plt.grid()
+    plt.title(data + " Expression")
+    plt.show()
+  
 #Task 3: Data Modelling (Classification)
 #Once split into separate scripts should start with
 #%run Task1.py
