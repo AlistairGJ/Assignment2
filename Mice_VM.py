@@ -147,7 +147,7 @@ ProteinData['Behavior'] = (ProteinData['Behavior']!='S/C').astype(int) # Makes S
 #Classification 1: K Nearest Neighbor
 from sklearn.cross_validation import train_test_split
 ProteinData_kneighbors = ProteinData[['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N', 'Genotype', 'Treatment', 'Behavior', 'MouseNo']]
-ProteinData_kneighbors.columns
+ProteinData_kneighbors.dtypes
 ProteinData_kneighbors.describe()
 
 X_train, X_test, y_train, y_test = train_test_split(ProteinData_kneighbors, ProteinData_kneighbors.index, test_size=0.4)
