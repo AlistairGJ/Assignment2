@@ -179,7 +179,7 @@ ProteinData.dtypes
 
 #Classification 1: K Nearest Neighbor
 from sklearn.cross_validation import train_test_split
-ProteinData_kneighbors = ProteinData[['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N', 'Genotype', 'Treatment', 'Behavior', 'MouseNo']]
+ProteinData_kneighbors = ProteinData[['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N', 'Genotype', 'Treatment', 'Behavior']]
 ProteinData_kneighbors.dtypes
 ProteinData_kneighbors.describe()
 
@@ -278,3 +278,23 @@ predicted.shape
 cm = confusion_matrix(y_test, predicted)
 print "5 neighbours predicted: "
 print cm
+
+X_train, X_test, y_train, y_test = train_test_split(ProteinData_kneighbors, ProteinData_kneighbors['Genotype'], test_size=0.4)
+
+X_train.shape
+y_train.shape
+
+#Analysis: 5 neighbours
+from sklearn.neighbors import KNeighborsClassifier
+clf = KNeighborsClassifier(5, weights='distance')
+fit = clf.fit(X_train, y_train)
+predicted = fit.predict(X_test)
+print "5 neighbours test: "
+print predicted
+predicted.shape
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, predicted)
+print "5 neighbours predicted: "
+print cm
+
+
