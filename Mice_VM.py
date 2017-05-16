@@ -11,29 +11,21 @@ AllProtein = pd.read_excel(AllProtein_filename, headers=0)
 #Task 2: Data Exploration and Visualisation
 #Once split into separate scripts should start with
 #%run Task1.py
-AllProtein.describe()
-
-#Makes a unique mouse column
-MakeMouseID = AllProtein['MouseID'].str.split('_').apply(pd.Series, 1)
-MakeMouseID.name = 'MouseIDavg'
-AllProteinID = AllProtein.join(MakeMouseID)
-AllProteinID.rename(columns = {0:'MouseIDavg'}, inplace = True)
-AllProteinID.columns
-AllProteinID.head(10)
-
-del AllProteinID[1]
-del AllProtein
-
-#Summary of data 1
-AllProteinID.dtypes
-AllProteinID.describe()
-AllProteinID['Genotype'].value_counts()
-AllProteinID['Treatment'].value_counts()
-AllProteinID['Behavior'].value_counts()
-AllProteinID['class'].value_counts()
 
 #Cuts data to include only 11 proteins we are going to use
-Protein11 = AllProteinID[['MouseID', 'BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N', 'Genotype', 'Treatment', 'Behavior', 'class', 'MouseIDavg']]
+Protein11_raw = AllProtein[['MouseID', 'BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N', 'Genotype', 'Treatment', 'Behavior', 'class', 'MouseIDavg']]
+
+#Makes a unique mouse column
+MakeMouseID = Protein11_raw['MouseID'].str.split('_').apply(pd.Series, 1)
+MakeMouseID.name = 'MouseIDavg'
+Protein11 = Protein11_raw.join(MakeMouseID)
+Protein11.rename(columns = {0:'MouseIDavg'}, inplace = True)
+Protein11.columns
+Protein11.head(10)
+
+del Protein11[1]
+del AllProtein
+del Protein11_raw
 
 #Summary of data 2
 Protein11.describe()
@@ -43,31 +35,17 @@ Protein11['Behavior'].value_counts()
 Protein11['class'].value_counts()
 
 #Data checking
-#Null
-mask_BRAF_null = pd.isnull(Protein11['BRAF_N'])
-Protein11.loc[mask_BRAF_null, 'MouseID']
-mask_pERK_null = pd.isnull(Protein11['pERK_N'])
-Protein11.loc[mask_pERK_null, 'MouseID']
-mask_pNUMB_null = pd.isnull(Protein11['pNUMB_N'])
-Protein11.loc[mask_pNUMB_null, 'MouseID']
-mask_DYRK1A_null = pd.isnull(Protein11['DYRK1A_N'])
-Protein11.loc[mask_DYRK1A_null, 'MouseID']
-mask_ITSN1_null = pd.isnull(Protein11['ITSN1_N'])
-Protein11.loc[mask_ITSN1_null, 'MouseID']
-mask_SOD1_null = pd.isnull(Protein11['SOD1_N'])
-Protein11.loc[mask_SOD1_null, 'MouseID']
+#Null - this will print out all the mice will null values
+ProteinList = ['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N']
+for index, data in enumerate(ProteinList):
+    mask_null = pd.isnull(Protein11[data])
+    print data
+    print Protein11.loc[mask_null, 'MouseID']
 
 #Outliers
-mask_BRAF_outlier = Protein11['BRAF_N'] > 2
-print Protein11.loc[mask_BRAF_outlier, 'MouseID']
-mask_pERK_outlier = Protein11['pERK_N'] > 3
-print Protein11.loc[mask_pERK_outlier, 'MouseID']
-mask_DYRK1A_outlier = Protein11['DYRK1A_N'] > 2
-print Protein11.loc[mask_DYRK1A_outlier, 'MouseID']
-mask_ITSN1_outlier = Protein11['ITSN1_N'] > 2
-print Protein11.loc[mask_ITSN1_outlier, 'MouseID']
+#Alistair to write this code
 
-#Initial graphs per variable and scatter matrix
+#Initial graphs per variable and scatter matrix - before have averaged to one value per mouse
 #Histograms
 ProteinList = ['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N']
 colours = ['#a6cee3', '#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99']
@@ -76,19 +54,6 @@ for index, data in enumerate(ProteinList):
     plt.title("Distribution of " + data)
     plt.xlabel("Mice")
     #plt.show()
-
-#Scatter plots
-##for index, data in enumerate(ProteinList):
-##    Protein11.plot(kind='scatter', figsize=(6,6), x=16, y=index, color=colours[index], label=data)
-##    plt.grid()
-##    plt.legend(loc='upper left')
-##    plt.xlim(-1,73)
-##    plt.ylim(0,3)
-##    plt.ylabel(data + ' Expression Level')
-##    plt.xlabel('Mouse')
-##    plt.title(data + " Expression")
-##    #plt.show()
-##    #plt.savefig(data + "_scatter.png") #need to get this working
 
 from pandas.tools.plotting import scatter_matrix
 scatter_matrix(Protein11, alpha=0.2,figsize=(16,16),diagonal='hist')
