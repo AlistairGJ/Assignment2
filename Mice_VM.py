@@ -1,6 +1,6 @@
 #Task 1: Data Retrieving
 import pandas as pd
-import numpy as np
+#import numpy as np not currently using this
 import matplotlib.pyplot as plt
 import urllib2
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00342/Data_Cortex_Nuclear.xls"
@@ -11,6 +11,10 @@ AllProtein = pd.read_excel(AllProtein_filename, headers=0)
 #Task 2: Data Exploration and Visualisation
 #Once split into separate scripts should start with
 #%run Task1.py
+AllProtein.describe
+AllProtein.columns
+AllProtein.dtypes
+AllProtein.describe()
 
 #Cuts data to include only 11 proteins we are going to use
 Protein11_raw = AllProtein[['MouseID', 'BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N', 'Genotype', 'Treatment', 'Behavior', 'class', 'MouseIDavg']]
