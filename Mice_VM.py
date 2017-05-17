@@ -17,7 +17,7 @@ AllProtein.dtypes
 AllProtein.describe()
 
 #Cuts data to include only 11 proteins we are going to use
-Protein11_raw = AllProtein[['MouseID', 'BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N', 'Genotype', 'Treatment', 'Behavior', 'class', 'MouseIDavg']]
+Protein11_raw = AllProtein[['MouseID', 'BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N', 'Genotype', 'Treatment', 'Behavior', 'class']]
 
 #Makes a unique mouse column
 MakeMouseID = Protein11_raw['MouseID'].str.split('_').apply(pd.Series, 1)
@@ -56,17 +56,17 @@ colours = ['#a6cee3', '#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f
 for index, data in enumerate(ProteinList):
     Protein11[data].plot(kind="hist", bins=20)
     plt.title("Distribution of " + data)
-    plt.xlabel("Mice")
-    #plt.show()
+    plt.xlabel("Mouse")
+    plt.show()
 
 from pandas.tools.plotting import scatter_matrix
 scatter_matrix(Protein11, alpha=0.2,figsize=(16,16),diagonal='hist')
-#plt.show()
+plt.show()
 
 #Creates one line per mouse by averaging variables
 ProteinMeans = Protein11.groupby(['MouseIDavg'], group_keys=True).mean()
 ProteinMeans['MouseIDavg'] = ProteinMeans.index
-ProteinObjects = AllProteinID[['MouseIDavg', 'Genotype', 'Treatment', 'Behavior', 'class']]
+ProteinObjects = Protein11[['MouseIDavg', 'Genotype', 'Treatment', 'Behavior', 'class']]
 ProteinObjectsGrp = ProteinObjects.groupby(['MouseIDavg']).first()
 ProteinObjectsGrp['MouseIDavg'] = ProteinObjectsGrp.index
 ProteinData = pd.merge(ProteinMeans, ProteinObjectsGrp, on='MouseIDavg', how='left')
@@ -79,8 +79,6 @@ ProteinData['Behavior'].value_counts()
 ProteinData['class'].value_counts()
 
 #Clean up old names
-del AllProtein_filename
-del AllProteinID
 del ProteinMeans
 del ProteinObjects
 del ProteinObjectsGrp
@@ -97,12 +95,12 @@ for index, data in enumerate(ProteinList3):
     ProteinData.plot(kind='box', y=index, color=colours3[index], label=data)
     plt.grid()
     plt.title(data + " Expression")
-    #plt.show()
+    plt.show()
 
 #Graphs
 from pandas.tools.plotting import scatter_matrix
 scatter_matrix(ProteinData, alpha=0.2,figsize=(16,16),diagonal='hist')
-#plt.show()
+plt.show()
 
 #Getting a numeric value for mouse to use in scatter plots
 ProteinData['MouseNo'] = ProteinData.index
@@ -120,7 +118,7 @@ plt.xlim(-1,73)
 plt.ylim(0,3)
 plt.ylabel('Protein Expression Level')
 plt.xlabel('Mouse')
-#plt.show()
+plt.show()
 
 colours = ['#a6cee3', '#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99']
 ProteinList = ['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N']
@@ -134,8 +132,32 @@ for index, data in enumerate(ProteinList):
     plt.ylabel(data + ' Expression Level')
     plt.xlabel('Mouse')
     plt.title(data + " Expression")
-    #plt.show()
- 
+    plt.show()
+    
+#Scatter matrix for 4 highly correlated variables
+Protein_correlated = Protein11[['MouseID', 'BRAF_N', 'pERK_N', 'DYRK1A_N','ITSN1_N', 'MouseIDavg']]
+scatter_matrix(Protein_correlated, alpha=0.2,figsize=(16,16),diagonal='hist')
+plt.show()
+
+Control = ProteinData['Genotype'] == 'Control'
+DS = ProteinData['Genotype'] == 'Ts65Dn'
+ProteinData.loc[Control, 'Genotype'] = 0
+ProteinData.loc[DS, 'Genotype'] = 1
+ProteinData['Genotype'].value_counts()
+colour_palette = {0:'#8da0cb', 1:'#fc8db2'}
+colours = [colour_palette[c] for c in Protein11['Genotype']]
+for index, data in enumerate(ProteinList): #This is not working yet
+    ProteinData.plot(kind='scatter', x=16, y=index, c=colours)
+    plt.xlim(-1,73)
+    plt.ylim(0,2)
+    plt.title(data + ' Expression by Mouse Genotype')
+    plt.xlabel('Mouse')
+    plt.ylabel(data + ' Expression Level')
+    plt.grid(True, which='major', color='#131313', linestyle='-')
+    plt.minorticks_on()
+    plt.show()
+    
+    
 #Task 3: Data Modelling (Classification)
 #Once split into separate scripts should start with
 #%run Task1.py
