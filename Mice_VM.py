@@ -58,13 +58,13 @@ plt.rc('font', **font)
 ProteinList = ['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N']
 colours = ['#a6cee3', '#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99']
 for index, data in enumerate(ProteinList):
-    Protein11[data].plot(kind="hist", bins=20, color=colours)
+    Protein11[data].plot(kind="hist", bins=20, color=colours[index])
     plt.title("Distribution of " + data)
     plt.show()
 
 from pandas.tools.plotting import scatter_matrix
 scatter_matrix(Protein11, alpha=0.2,figsize=(16,16),diagonal='hist')
-plt.title('Protein Distribution Scatter Matrix')
+plt.suptitle('Protein Distribution Scatter Matrix')
 plt.show()
 
 #Creates one line per mouse by averaging variables
@@ -99,7 +99,7 @@ for index, data in enumerate(ProteinList3):
 #Graphs
 from pandas.tools.plotting import scatter_matrix
 scatter_matrix(ProteinData, alpha=0.2,figsize=(16,16),diagonal='hist')
-plt.title('Protein Distribution - One Value per Mouse')
+plt.suptitle('Protein Distribution - One Value per Mouse')
 plt.show()
 
 #Getting a numeric value for mouse to use in scatter plots
@@ -109,7 +109,7 @@ ProteinData.columns
 #Scatter plot showing all proteins on the one plot
 colours2 = ['#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99']
 ProteinList2 = ['pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N']
-ax = ProteinData.plot(kind='scatter', figsize=(12,12), x=16, y=0, color='#a6cee3', label='BRAF_N');
+ax = ProteinData.plot(kind='scatter', figsize=(12,12), x=16, y=0, color='#a6cee3', label='BRAF_N',s=50);
 for index, data in enumerate(ProteinList2):
     ProteinData.plot(kind='scatter', x=16, y=index+1, color=colours2[index], label=data, ax=ax, s=50);
 plt.grid()
@@ -136,7 +136,7 @@ for index, data in enumerate(ProteinList):
 #Scatter matrix for 4 highly correlated variables
 Protein_correlated = Protein11[['MouseID', 'BRAF_N', 'pERK_N', 'DYRK1A_N','ITSN1_N']]
 scatter_matrix(Protein_correlated, alpha=0.2,figsize=(16,16),diagonal='hist')
-plt.title("Scatter Matrix for Highly Correlated Proteins")
+plt.suptitle("Scatter Matrix for Highly Correlated Proteins")
 plt.show()
 
 #Scatter plot per protein by genotype
@@ -148,7 +148,7 @@ colours = ['#ed2939', '#2cc2e8']
 for index, data in enumerate(ProteinList):
     ProteinData.plot(kind='scatter', x=16, y=index, s=50, c=colors)
     plt.xlim(-1,73)
-    plt.ylim(0,2)
+    plt.ylim(0,3)
     plt.title(str(data) + ' Expression by Mouse Genotype')
     plt.xlabel('Mouse')
     plt.ylabel(data)
@@ -169,7 +169,7 @@ colours = ['#ade799', '#d399e7']
 for index, data in enumerate(ProteinList):
     ProteinData.plot(kind='scatter', x=16, y=index, s=50, c=colors)
     plt.xlim(-1,73)
-    plt.ylim(0,2)
+    plt.ylim(0,3)
     plt.title(str(data) + ' Expression by Treatment')
     plt.xlabel('Mouse')
     plt.ylabel(data)
@@ -190,7 +190,7 @@ colours = ['#ffdd0f', '#f22f74']
 for index, data in enumerate(ProteinList):
     ProteinData.plot(kind='scatter', x=16, y=index, s=50, c=colors)
     plt.xlim(-1,73)
-    plt.ylim(0,2)
+    plt.ylim(0,3)
     plt.title(str(data) + ' Expression by Mouse Behaviour')
     plt.xlabel('Mouse')
     plt.ylabel(data)
@@ -205,13 +205,17 @@ for index, data in enumerate(ProteinList):
     
 #Scatter plot per protein by class
 ProteinData['class'].value_counts()
-colour_palette = {'c-SC-m' :'#e41a1c', 'c-CS-m':'#377eb8', 'c-CS-s' :'#4daf4a', 't-CS-m':'#984ea3','t-SC-s' :'#ff7f00', 't-SC-m':'#ffff33', 'c-SC-s' :'#a65628', 't-CS-s':'#f781bf'}
+colour_palette = {'c-SC-m' :'#984ea3', 'c-CS-m':'#4daf4a', 'c-CS-s' :'#4daf4a', 't-CS-m':'#4daf4a','t-SC-s' :'#984ea3', 't-SC-m':'#984ea3', 'c-SC-s' :'#984ea3', 't-CS-s':'#4daf4a'}
+#Need to fix colours
 colors = [colour_palette[c] for c in ProteinData['class']]
+#marker = ['s','s','s','o','o','o','s','o']
+#size_palette = {'c-SC-m' :'50', 'c-CS-m':'50', 'c-CS-s' :'30', 't-CS-m':'50','t-SC-s' :'30', 't-SC-m':'50', 'c-SC-s' :'30', 't-CS-s':'30'}
+#size = [size_palette[s] for s in ProteinData['class']]
 colours = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf']
 for index, data in enumerate(ProteinList):
-    ProteinData.plot(kind='scatter', x=16, y=index, s=50, c=colors)
+    ProteinData.plot(kind='scatter', x=16, y=index, s=50, c=colors)#, marker)
     plt.xlim(-1,73)
-    plt.ylim(0,2)
+    plt.ylim(0,3)
     plt.title(str(data) + ' Expression by Mouse Class')
     plt.xlabel('Mouse')
     plt.ylabel(data)
