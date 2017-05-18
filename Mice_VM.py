@@ -135,20 +135,22 @@ for index, data in enumerate(ProteinList):
     plt.show()
     
 #Scatter matrix for 4 highly correlated variables
-Protein_correlated = Protein11[['MouseID', 'BRAF_N', 'pERK_N', 'DYRK1A_N','ITSN1_N', 'MouseIDavg']]
+Protein_correlated = Protein11[['MouseID', 'BRAF_N', 'pERK_N', 'DYRK1A_N','ITSN1_N']]
 scatter_matrix(Protein_correlated, alpha=0.2,figsize=(16,16),diagonal='hist')
 plt.show()
 
-#Scatter plot per protein by genotype
-import matplotlib.patches as mpatches
-Control = ProteinData['Genotype'] == 0
-DS = ProteinData['Genotype'] == 1
-ProteinData['Genotype'].value_counts()
+#Scatter plot per protein by genotype - not quite working yet
+"""import matplotlib.patches as mpatches
+Control = ProteinData['Genotype'] == 'Control'
+DS = ProteinData['Genotype'] == 'Ts65Dn'
+ProteinData.loc[Control, 'Genotype'] = 0
+ProteinData.loc[DS, 'Genotype'] = 1
+print ProteinData['Genotype'].value_counts()
 colour_palette = {0:'#ed2939', 1:'#2cc2e8'}
 colors = [colour_palette[c] for c in ProteinData['Genotype']]
-colours = ['#ed2939', '#2cc2e8']
-for index, data in enumerate(ProteinData['Genotype']):
-    ProteinData.plot(kind='scatter', x=16, y=index, s=50, c=colors)
+#colours = ['#ed2939', '#2cc2e8']
+for index, data in enumerate(ProteinList['Genotype']):
+    ProteinData.plot(kind='scatter', x=16, y=index, s=50, c=colors, label=data)
     plt.xlim(-1,73)
     plt.ylim(0,2)
     plt.title(str(data) + ' Expression by Mouse Genotype')
@@ -156,11 +158,12 @@ for index, data in enumerate(ProteinData['Genotype']):
     plt.ylabel(data)
     plt.grid(True, which='major', color='#131313', linestyle='-')
     plt.minorticks_on()
-    recs = []
-    for i in range(0, len(colours)):
-        recs.append(mpatches.Rectangle((0,0),1,1,fc=colours[i]))
-    plt.legend(recs, data, loc=1)
-    plt.show()
+    #recs = []
+    #labels = 'Control', 'Ts65Dn'
+    #for i in range(0, len(colours)):
+    #    recs.append(mpatches.Rectangle((0,0),1,1,fc=colours[i]))
+    #plt.legend(recs, labels, loc=1)
+    plt.show()"""
    
 #Task 3: Data Modelling (Classification)
 #Once split into separate scripts should start with
