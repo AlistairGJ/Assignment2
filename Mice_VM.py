@@ -49,6 +49,10 @@ for index, data in enumerate(ProteinList):
 #Outliers
 #Alistair to write this code
 
+#Setting up plotting basics
+font = {'family' : 'monospace', 'weight' : 'regular', 'size' : '10'}
+plt.rc('font', **font)
+
 #Initial graphs per variable and scatter matrix - before have averaged to one value per mouse
 #Histograms
 ProteinList = ['BRAF_N', 'pERK_N', 'S6_N', 'pGSK3B_N', 'CaNA_N', 'CDK5_N', 'pNUMB_N', 'DYRK1A_N', 'ITSN1_N', 'SOD1_N', 'GFAP_N']
@@ -82,10 +86,6 @@ ProteinData['class'].value_counts()
 del ProteinMeans
 del ProteinObjects
 del ProteinObjectsGrp
-
-#Setting up plotting basics
-font = {'family' : 'monospace', 'weight' : 'regular', 'size' : '10'}
-plt.rc('font', **font)
 
 #Graphs to check for outliers
 colours3 = ['#a6cee3', '#1f78b4','#ff7f00','#cab2d6']
@@ -139,25 +139,29 @@ Protein_correlated = Protein11[['MouseID', 'BRAF_N', 'pERK_N', 'DYRK1A_N','ITSN1
 scatter_matrix(Protein_correlated, alpha=0.2,figsize=(16,16),diagonal='hist')
 plt.show()
 
-Control = ProteinData['Genotype'] == 'Control'
-DS = ProteinData['Genotype'] == 'Ts65Dn'
-ProteinData.loc[Control, 'Genotype'] = 0
-ProteinData.loc[DS, 'Genotype'] = 1
+#Scatter plot per protein by genotype
+import matplotlib.patches as mpatches
+Control = ProteinData['Genotype'] == 0
+DS = ProteinData['Genotype'] == 1
 ProteinData['Genotype'].value_counts()
-colour_palette = {0:'#8da0cb', 1:'#fc8db2'}
-colours = [colour_palette[c] for c in Protein11['Genotype']]
-for index, data in enumerate(ProteinList): #This is not working yet
-    ProteinData.plot(kind='scatter', x=16, y=index, c=colours)
+colour_palette = {0:'#ed2939', 1:'#2cc2e8'}
+colors = [colour_palette[c] for c in ProteinData['Genotype']]
+colours = ['#ed2939', '#2cc2e8']
+for index, data in enumerate(ProteinData['Genotype']):
+    ProteinData.plot(kind='scatter', x=16, y=index, s=50, c=colors)
     plt.xlim(-1,73)
     plt.ylim(0,2)
-    plt.title(data + ' Expression by Mouse Genotype')
+    plt.title(str(data) + ' Expression by Mouse Genotype')
     plt.xlabel('Mouse')
-    plt.ylabel(data + ' Expression Level')
+    plt.ylabel(data)
     plt.grid(True, which='major', color='#131313', linestyle='-')
     plt.minorticks_on()
+    recs = []
+    for i in range(0, len(colours)):
+        recs.append(mpatches.Rectangle((0,0),1,1,fc=colours[i]))
+    plt.legend(recs, data, loc=1)
     plt.show()
-    
-    
+   
 #Task 3: Data Modelling (Classification)
 #Once split into separate scripts should start with
 #%run Task1.py
