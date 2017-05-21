@@ -126,13 +126,13 @@ def makeTables():
                                        'Avg Class 6', 'SD Class 6',
                                        'Avg Class 7', 'SD Class 7'])
 
-    #print outliersDF
+    print outliersDF
 
 print "Main tables with outliers included"
 
 makeTables()
 
-#print "BEFORE"
+print "BEFORE"
 
 for proteinName in proteinNames:
     print Protein11[Protein11[proteinName].isnull()]
@@ -150,7 +150,7 @@ def make_nans(row):
 
 Protein11 = Protein11.apply(make_nans, axis=1)
 
-#print "AFTER"
+print "AFTER"
 
 for proteinName in proteinNames:
     print Protein11[Protein11[proteinName].isnull()]
@@ -173,7 +173,7 @@ def make_averages(row):
 
 Protein11 = Protein11.apply(make_averages, axis=1)
 
-#print "NANS CONVERTED TO AVERAGES"
+print "NANS CONVERTED TO AVERAGES"
 
 for proteinName in proteinNames:
     print Protein11[Protein11[proteinName].isnull()]
@@ -181,7 +181,7 @@ for proteinName in proteinNames:
 print "Main tables after conversion of NAN to Average"
 
 makeTables()
-#Protein11.to_csv("finalData.csv")
+Protein11.to_csv("finalData.csv")
 
 mouseRows = []
 for mouseID in miceIDs:
@@ -207,7 +207,7 @@ miceDF['Behavior'].value_counts()
 miceDF['Class'].value_counts()
 
 #print miceDF
-#miceDF.to_csv('miceAverages.csv')
+miceDF.to_csv('miceAverages.csv')
 
 #This makes a unique mouse field
 MakeMouseID = Protein11['MouseID'].str.split('_').apply(pd.Series, 1)
